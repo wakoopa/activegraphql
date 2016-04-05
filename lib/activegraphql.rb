@@ -1,3 +1,4 @@
+require 'active_support'
 require 'activegraphql/version'
 require 'activegraphql/query'
 require 'activegraphql/fetcher'

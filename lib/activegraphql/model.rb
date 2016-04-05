@@ -1,3 +1,4 @@
+require 'active_support/core_ext'
 require 'hashie/mash'
 
 module ActiveGraphql
@@ -36,17 +37,18 @@ module ActiveGraphql
       end
 
       def where(conditions = {})
-        Fetcher.new(url: configurable_class.url,
-                    klass: self,
-                    action: name.demodulize.underscore.pluralize,
-                    params: conditions)
+        build_fetcher(name.demodulize.underscore.pluralize.to_sym, conditions)
       end
 
       def find_by(conditions = {})
+        build_fetcher(name.demodulize.underscore.to_sym, conditions)
+      end
+
+      def build_fetcher(action, params)
         Fetcher.new(url: configurable_class.url,
                     klass: self,
-                    action: name.demodulize.underscore,
-                    params: conditions)
+                    action: action,
+                    params: params)
       end
     end
   end
