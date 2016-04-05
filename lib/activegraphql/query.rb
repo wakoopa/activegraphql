@@ -1,3 +1,4 @@
+require 'httparty'
 require 'active_support/inflector'
 require 'activegraphql/support/fancy'
 
@@ -9,6 +10,7 @@ module ActiveGraphql
 
     def get(*graph)
       self.graph = graph
+
       self.response = HTTParty.get(url, query: { query: to_s })
 
       fail(ServerError, response_error_messages) if response_errors.present?
@@ -29,10 +31,8 @@ module ActiveGraphql
     end
 
     def to_s
-      "{ #{qaction}(#{qparams}) { #{qgraph} } }"
+      "{ #{qaction}(#{qparams}) { #{qgraph(graph)} } }"
     end
-
-    private
 
     def qaction
       action.to_s.camelize(:lower)
@@ -40,15 +40,22 @@ module ActiveGraphql
 
     def qparams
       params.map do |k, v|
-        "#{k.to_s.camelize(:lower)}:\"#{v}\""
-      end.join(',')
+        "#{k.to_s.camelize(:lower)}: \"#{v}\""
+      end.join(', ')
     end
 
-    def qgraph
-      graph.map do |k|
-        k.to_s.camelize(:lower)
-      end.join
+    def qgraph(graph)
+      graph.map do |item|
+        case item
+        when Symbol
+          item.to_s.camelize(:lower)
+        when Hash then
+          item.map { |k, v| "#{k.to_s.camelize(:lower)} { #{qgraph(v)} }" }
+        end
+      end.join(', ')
     end
+
+    private
 
     def to_snake_case(value)
       case value
