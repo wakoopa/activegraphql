@@ -48,7 +48,7 @@ module ActiveGraphql
         build_fetcher(name.demodulize.underscore.to_sym, conditions)
       end
 
-      def build_fetcher(action, params)
+      def build_fetcher(action, params = nil)
         Fetcher.new(url: configurable_class.url,
                     klass: self,
                     action: action,

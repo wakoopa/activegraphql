@@ -1,13 +1,13 @@
 describe ActiveGraphql::Model do
+  let(:configured_class) do
+    ConfiguredClass ||= Class.new(described_class) do
+      configure url: 'service_url'
+    end
+  end
+
   describe '.build_fetcher' do
     let(:action) { 'some_action' }
     let(:params) { 'some_params' }
-
-    let(:configured_class) do
-      Class.new(described_class) do
-        configure url: 'service_url'
-      end
-    end
 
     subject { klass.build_fetcher(action, params) }
 
@@ -30,57 +30,54 @@ describe ActiveGraphql::Model do
     end
   end
 
-  describe '.all' do
-    let(:klass) do
-      Object.const_set 'MyAllEntity', Class.new(described_class)
-    end
-
+  shared_context 'with expected fetcher', with_expected_fetcher: true do
     let(:fetcher) { double(:fetcher) }
 
     before do
-      expect(described_class)
-        .to receive(:build_fetcher).with(:my_all_entities).and_return(fetcher)
+      expect(ActiveGraphql::Fetcher)
+        .to receive(:new).with(expected_fetcher_params).and_return(fetcher)
+    end
+  end
+
+  describe '.all', with_expected_fetcher: true do
+    let(:expected_fetcher_params) do
+      { url: 'service_url',
+        klass: configured_class,
+        action: :configured_classes,
+        params: nil }
     end
 
-    subject { klass.all }
+    subject { configured_class.all }
 
     it { is_expected.to be fetcher }
   end
 
-  describe '.where' do
+  describe '.where', with_expected_fetcher: true  do
     let(:conditions) { double(:conditions) }
 
-    let(:klass) do
-      Object.const_set 'MyWhereEntity', Class.new(described_class)
+    let(:expected_fetcher_params) do
+      { url: 'service_url',
+        klass: configured_class,
+        action: :configured_classes,
+        params: conditions }
     end
 
-    let(:fetcher) { double(:fetcher) }
-
-    before do
-      expect(described_class)
-        .to receive(:build_fetcher).with(:my_where_entities, conditions).and_return(fetcher)
-    end
-
-    subject { klass.where(conditions) }
+    subject { configured_class.where(conditions) }
 
     it { is_expected.to be fetcher }
   end
 
-  describe '.find_by' do
+  describe '.find_by', with_expected_fetcher: true  do
     let(:conditions) { double(:conditions) }
 
-    let(:klass) do
-      Object.const_set 'MyFindByEntity', Class.new(described_class)
+    let(:expected_fetcher_params) do
+      { url: 'service_url',
+        klass: configured_class,
+        action: :configured_class,
+        params: conditions }
     end
 
-    let(:fetcher) { double(:fetcher) }
-
-    before do
-      expect(described_class)
-        .to receive(:build_fetcher).with(:my_find_by_entity, conditions).and_return(fetcher)
-    end
-
-    subject { klass.find_by(conditions) }
+    subject { configured_class.find_by(conditions) }
 
     it { is_expected.to be fetcher }
   end
