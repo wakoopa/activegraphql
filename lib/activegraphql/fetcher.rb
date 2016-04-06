@@ -13,6 +13,7 @@ module ActiveGraphql
 
     def fetch(graph = {})
       response = query.get(graph)
+      return if response.blank?
 
       case response
       when Hash

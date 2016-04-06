@@ -41,6 +41,14 @@ describe ActiveGraphql::Fetcher do
       its(:field) { is_expected.to eq 'value1' }
     end
 
+    context 'with nil response' do
+      let(:query_response) { nil }
+
+      subject { fetcher.fetch(graph) }
+
+      it { is_expected.to be_nil }
+    end
+
     context 'with unexpected response' do
       let(:query_response) { double(:unexpected) }
 
