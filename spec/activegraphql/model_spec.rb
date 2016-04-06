@@ -30,6 +30,23 @@ describe ActiveGraphql::Model do
     end
   end
 
+  describe '.all' do
+    let(:klass) do
+      Object.const_set 'MyAllEntity', Class.new(described_class)
+    end
+
+    let(:fetcher) { double(:fetcher) }
+
+    before do
+      expect(described_class)
+        .to receive(:build_fetcher).with(:my_all_entities).and_return(fetcher)
+    end
+
+    subject { klass.all }
+
+    it { is_expected.to be fetcher }
+  end
+
   describe '.where' do
     let(:conditions) { double(:conditions) }
 

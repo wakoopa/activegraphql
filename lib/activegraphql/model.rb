@@ -36,6 +36,10 @@ module ActiveGraphql
         ancestors[ancestors.find_index(ActiveGraphql::Model) - 1]
       end
 
+      def all
+        build_fetcher(name.demodulize.underscore.pluralize.to_sym)
+      end
+
       def where(conditions = {})
         build_fetcher(name.demodulize.underscore.pluralize.to_sym, conditions)
       end

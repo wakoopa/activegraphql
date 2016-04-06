@@ -31,7 +31,10 @@ module ActiveGraphql
     end
 
     def to_s
-      "{ #{qaction}(#{qparams}) { #{qgraph(graph)} } }"
+      str = "{ #{qaction}"
+      str << (qparams.present? ? "(#{qparams}) {" : ' {')
+      str << " #{qgraph(graph)} } }"
+      str
     end
 
     def qaction
@@ -39,6 +42,8 @@ module ActiveGraphql
     end
 
     def qparams
+      return if params.blank?
+
       params.map do |k, v|
         "#{k.to_s.camelize(:lower)}: \"#{v}\""
       end.join(', ')

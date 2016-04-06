@@ -18,17 +18,24 @@ describe ActiveGraphql::Query do
      :attr2]
   end
 
-  let(:expected_query) do
+  let(:expected_query_with_params) do
     '{ someLongActionName'\
     '(someLongParamName1: "value1", someLongParamName2: "value2") { ' \
     'attr1, object { nestedAttr, nestedObject { superNestedAttr } }, attr2 }' \
     ' }'
   end
 
+  let(:expected_query_without_params) do
+    '{ someLongActionName { ' \
+    'attr1, object { nestedAttr, nestedObject { superNestedAttr } }, attr2 }' \
+    ' }'
+  end
+
   describe '#get' do
     before do
-      expect(HTTParty)
-        .to receive(:get).with(url, query: { query: expected_query }).and_return(response)
+      expect(HTTParty).to receive(:get)
+        .with(url, query: { query: expected_query_with_params })
+        .and_return(response)
     end
 
     subject { query.get(*graph) }
@@ -63,7 +70,15 @@ describe ActiveGraphql::Query do
       query.tap { |q| q.graph = graph }.to_s
     end
 
-    it { is_expected.to eq expected_query }
+    context 'without params' do
+      let(:params) { nil }
+
+      it { is_expected.to eq expected_query_without_params }
+    end
+
+    context 'with params' do
+      it { is_expected.to eq expected_query_with_params }
+    end
   end
 
   describe '#qaction' do
@@ -75,7 +90,15 @@ describe ActiveGraphql::Query do
   describe 'qparams' do
     subject { query.qparams }
 
-    it { is_expected.to eq "someLongParamName1: \"value1\", someLongParamName2: \"value2\"" }
+    context 'without params' do
+      let(:params) { nil }
+
+      it { is_expected.to be_nil }
+    end
+
+    context 'with params' do
+      it { is_expected.to eq "someLongParamName1: \"value1\", someLongParamName2: \"value2\"" }
+    end
   end
 
   describe '#qgraph' do
