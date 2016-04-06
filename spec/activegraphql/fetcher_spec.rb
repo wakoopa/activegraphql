@@ -26,11 +26,17 @@ describe ActiveGraphql::Fetcher do
     end
 
     context 'with hash response' do
-      let(:query_response) { { field: 'value' } }
+      let(:query_response) do
+        { field: 'value', nested_object: { field: 'value' } }
+      end
 
       subject { fetcher.fetch(graph) }
 
       its(:field) { is_expected.to eq 'value' }
+
+      it 'also works with nested objects' do
+        expect(subject.nested_object.field).to eq 'value'
+      end
     end
 
     context 'with array response' do
