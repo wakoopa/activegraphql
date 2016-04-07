@@ -21,7 +21,7 @@ module ActiveGraphQL
       when Array
         response.map { |h| klass.new(h) }
       else
-        fail Error, "Unexpected response for query: #{response}"
+        raise Error, "Unexpected response for query: #{response}"
       end
     end
   end
