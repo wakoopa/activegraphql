@@ -13,7 +13,7 @@ module ActiveGraphql
 
       self.response = HTTParty.get(url, query: { query: to_s })
 
-      fail(ServerError, response_error_messages) if response_errors.present?
+      raise(ServerError, response_error_messages) if response_errors.present?
       response_data
     end
 
@@ -44,20 +44,24 @@ module ActiveGraphql
     def qparams
       return if params.blank?
 
-      params.map do |k, v|
+      param_strings = params.map do |k, v|
         "#{k.to_s.camelize(:lower)}: \"#{v}\""
-      end.join(', ')
+      end
+
+      param_strings.join(', ')
     end
 
     def qgraph(graph)
-      graph.map do |item|
+      graph_strings = graph.map do |item|
         case item
         when Symbol
           item.to_s.camelize(:lower)
-        when Hash then
+        when Hash
           item.map { |k, v| "#{k.to_s.camelize(:lower)} { #{qgraph(v)} }" }
         end
-      end.join(', ')
+      end
+
+      graph_strings.join(', ')
     end
 
     private
