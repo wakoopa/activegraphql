@@ -1,21 +1,21 @@
-# ActiveGraphql
+# ActiveGraphQL
 
-ActiveGraphql connects classes to [GraphQL](http://graphql.org/) services.
+ActiveGraphQL connects classes to [GraphQL](http://graphql.org/) services.
 The library provides a **Model** class that, when subclassed and configured, encapsulates the communication with the service.
 
 ```ruby
-class MyModel < ActiveGraphql::Model
+class MyModel < ActiveGraphQL::Model
   configure url: 'http://some-graphql-service/endpoint'
 end
 ```
 
-Any subclass of `ActiveGraphql::Model` will provide the following methods:
+Any subclass of `ActiveGraphQL::Model` will provide the following methods:
 
 - **all:** Retrive all objects for the entity.
 - **where(conditions):** Retrieve all objects for the entity finding by conditions.
 - **find_by(conditions):** Retrieve first object for the entity finding by conditions.
 
-Any one of these methods returns an `ActiveGraphql::Fetcher` who provides the method `fetch(*graph)` that is responsible of calling the service. The `*graph` arguments allow to specify how the response format will be.
+Any one of these methods returns an `ActiveGraphQL::Fetcher` who provides the method `fetch(*graph)` that is responsible of calling the service. The `*graph` arguments allow to specify how the response format will be.
 
 For convention, any method is performing a call to the service with a query, that is resolved based on: model class name, conditions and graph.
 
