@@ -1,5 +1,5 @@
+require 'active_support'
 require 'activegraphql/version'
-
-module ActiveGraphql
-  # Your code goes here...
-end
+require 'activegraphql/query'
+require 'activegraphql/fetcher'
+require 'activegraphql/model'
