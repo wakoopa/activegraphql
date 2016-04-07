@@ -1,4 +1,4 @@
-module ActiveGraphql
+module ActiveGraphQL
   module Support
     class Fancy
       def initialize(attrs = {})

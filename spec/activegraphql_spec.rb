@@ -1,5 +1,5 @@
-describe ActiveGraphql do
+describe ActiveGraphQL do
   it 'has a version number' do
-    expect(ActiveGraphql::VERSION).not_to be nil
+    expect(ActiveGraphQL::VERSION).not_to be nil
   end
 end

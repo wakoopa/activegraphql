@@ -1,7 +1,7 @@
 require 'active_support/core_ext'
 require 'hashie/mash'
 
-module ActiveGraphql
+module ActiveGraphQL
   class Model < ::Hashie::Mash
     class Error < StandardError; end
 
@@ -33,7 +33,7 @@ module ActiveGraphql
       #  This provides the capability for configuring inheritable classes with
       #  specific configuration to the corresponding graphql service.
       def configurable_class
-        ancestors[ancestors.find_index(ActiveGraphql::Model) - 1]
+        ancestors[ancestors.find_index(ActiveGraphQL::Model) - 1]
       end
 
       def all

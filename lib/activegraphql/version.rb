@@ -1,3 +1,3 @@
-module ActiveGraphql
+module ActiveGraphQL
   VERSION = '0.1.0'
 end

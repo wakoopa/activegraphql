@@ -2,7 +2,7 @@ require 'httparty'
 require 'active_support/inflector'
 require 'activegraphql/support/fancy'
 
-module ActiveGraphql
+module ActiveGraphQL
   class Query < Support::Fancy
     attr_accessor :url, :action, :params, :graph, :response
 

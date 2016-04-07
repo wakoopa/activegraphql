@@ -5,7 +5,7 @@ require 'activegraphql/version'
 
 Gem::Specification.new do |spec|
   spec.name          = 'activegraphql'
-  spec.version       = ActiveGraphql::VERSION
+  spec.version       = ActiveGraphQL::VERSION
   spec.authors       = ['Wakoopa']
   spec.email         = ['info@wakoopa.com']
 

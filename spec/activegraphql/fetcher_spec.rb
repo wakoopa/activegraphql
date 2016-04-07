@@ -1,4 +1,4 @@
-describe ActiveGraphql::Fetcher do
+describe ActiveGraphQL::Fetcher do
   let(:fetcher) do
     described_class.new(url: url,
                         klass: Class.new(::Hashie::Mash),
@@ -14,7 +14,7 @@ describe ActiveGraphql::Fetcher do
   let(:graph) { [:some, graph: [:with, :stuff]] }
 
   before do
-    expect(ActiveGraphql::Query)
+    expect(ActiveGraphQL::Query)
       .to receive(:new).with(url: url,
                              action: action,
                              params: params).and_return(query)
@@ -61,7 +61,7 @@ describe ActiveGraphql::Fetcher do
       subject { fetcher.fetch(*graph) }
 
       it 'fails with unexpected error' do
-        expect { subject }.to raise_error(ActiveGraphql::Fetcher::Error)
+        expect { subject }.to raise_error(ActiveGraphQL::Fetcher::Error)
       end
     end
   end

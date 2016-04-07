@@ -1,4 +1,4 @@
-describe ActiveGraphql::Model do
+describe ActiveGraphQL::Model do
   let(:configured_class) do
     ConfiguredClass ||= Class.new(described_class) do
       configure url: 'service_url'
@@ -34,7 +34,7 @@ describe ActiveGraphql::Model do
     let(:fetcher) { double(:fetcher) }
 
     before do
-      expect(ActiveGraphql::Fetcher)
+      expect(ActiveGraphQL::Fetcher)
         .to receive(:new).with(expected_fetcher_params).and_return(fetcher)
     end
   end

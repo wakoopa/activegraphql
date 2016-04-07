@@ -1,4 +1,4 @@
-describe ActiveGraphql::Query do
+describe ActiveGraphQL::Query do
   let(:query) do
     described_class.new(url: url,
                         action: action,
@@ -59,7 +59,7 @@ describe ActiveGraphql::Query do
       end
 
       it 'fails with an error' do
-        expect { subject }.to raise_error(ActiveGraphql::Query::ServerError,
+        expect { subject }.to raise_error(ActiveGraphQL::Query::ServerError,
                                           /"message1", "message2"/)
       end
     end

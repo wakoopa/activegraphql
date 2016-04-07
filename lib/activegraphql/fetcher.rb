@@ -1,6 +1,6 @@
 require 'activegraphql/support/fancy'
 
-module ActiveGraphql
+module ActiveGraphQL
   class Fetcher < Support::Fancy
     attr_accessor :url, :klass, :action, :params, :query
 
