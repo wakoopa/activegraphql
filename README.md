@@ -1,5 +1,7 @@
 # ActiveGraphQL
 
+[![Build Status](https://travis-ci.org/wakoopa/activegraphql.png)](https://travis-ci.org/wakoopa/activegraphql)
+
 ActiveGraphQL connects classes to [GraphQL](http://graphql.org/) services.
 The library provides a **Model** class that, when subclassed and configured, encapsulates the communication with the service.
 
