@@ -11,7 +11,7 @@ describe ActiveGraphql::Fetcher do
   let(:action) { :some_action }
   let(:params) { { some: 'params' } }
   let(:query) { double(:query) }
-  let(:graph) { double(:graph) }
+  let(:graph) { [:some, graph: [:with, :stuff]] }
 
   before do
     expect(ActiveGraphql::Query)
@@ -22,7 +22,7 @@ describe ActiveGraphql::Fetcher do
 
   describe '#fetch' do
     before do
-      expect(query).to receive(:get).with(graph).and_return(query_response)
+      expect(query).to receive(:get).with(*graph).and_return(query_response)
     end
 
     context 'with hash response' do
@@ -30,7 +30,7 @@ describe ActiveGraphql::Fetcher do
         { field: 'value', nested_object: { field: 'value' } }
       end
 
-      subject { fetcher.fetch(graph) }
+      subject { fetcher.fetch(*graph) }
 
       its(:field) { is_expected.to eq 'value' }
 
@@ -42,7 +42,7 @@ describe ActiveGraphql::Fetcher do
     context 'with array response' do
       let(:query_response) { [{ field: 'value1' }, { field: 'value2' }] }
 
-      subject { fetcher.fetch(graph).first }
+      subject { fetcher.fetch(*graph).first }
 
       its(:field) { is_expected.to eq 'value1' }
     end
@@ -50,7 +50,7 @@ describe ActiveGraphql::Fetcher do
     context 'with nil response' do
       let(:query_response) { nil }
 
-      subject { fetcher.fetch(graph) }
+      subject { fetcher.fetch(*graph) }
 
       it { is_expected.to be_nil }
     end
@@ -58,7 +58,7 @@ describe ActiveGraphql::Fetcher do
     context 'with unexpected response' do
       let(:query_response) { double(:unexpected) }
 
-      subject { fetcher.fetch(graph) }
+      subject { fetcher.fetch(*graph) }
 
       it 'fails with unexpected error' do
         expect { subject }.to raise_error(ActiveGraphql::Fetcher::Error)

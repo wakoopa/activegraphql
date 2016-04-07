@@ -11,8 +11,8 @@ module ActiveGraphql
       self.query = Query.new(url: url, action: action, params: params)
     end
 
-    def fetch(graph = {})
-      response = query.get(graph)
+    def fetch(*graph)
+      response = query.get(*graph)
       return if response.blank?
 
       case response
