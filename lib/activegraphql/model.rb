@@ -8,8 +8,8 @@ module ActiveGraphql
     class << self
       attr_accessor :url
 
-      # This provides hability to configure the class inherited from here.
-      #  Also field classes will have the the configuration.
+      # This provides ability to configure the class inherited from here.
+      #  Also field classes will have the configuration.
       #
       #  Example:
       #    class BaseModelToMyService < ActiveGraphql::Model
