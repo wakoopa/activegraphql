@@ -33,12 +33,15 @@ describe ActiveGraphQL::Query do
 
   describe '#get' do
     before do
-      expect(HTTParty).to receive(:get)
-        .with(url, query: { query: expected_query_with_params })
-        .and_return(response)
+      expect(HTTParty)
+        .to receive(:get).with(url, expected_request_options).and_return(response)
     end
 
     subject { query.get(*graph) }
+
+    let(:expected_request_options) do
+      { query: { query: expected_query_with_params } }
+    end
 
     context 'with no errors in the response' do
       let(:response) do
@@ -46,6 +49,19 @@ describe ActiveGraphQL::Query do
       end
 
       it { is_expected.to eq(some_expected: 'data') }
+
+      context 'with locale' do
+        let(:locale) { :en }
+
+        let(:expected_request_options) do
+          { headers: { 'accept_language' => locale.to_s },
+            query: { query: expected_query_with_params } }
+        end
+
+        before { query.locale = locale }
+
+        it { is_expected.to eq(some_expected: 'data') }
+      end
     end
 
     context 'with errors in the response' do

@@ -8,7 +8,15 @@ module ActiveGraphQL
 
     def initialize(attrs)
       super(attrs)
-      self.query = Query.new(url: url, action: action, params: params)
+    end
+
+    def query
+      @query ||= Query.new(url: url, action: action, params: params)
+    end
+
+    def in_locale(locale)
+      query.locale = locale if locale.present?
+      self
     end
 
     def fetch(*graph)

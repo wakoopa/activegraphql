@@ -72,3 +72,18 @@ Resolved query:
 ```
 { myModel("id": "5") { id, name, nestedObject { description } } }
 ```
+
+## Localisation support
+Any fetcher provides the `in_locale(locale)` method that makes the call to include the `HTTP_ACCEPT_LANGUAGE` header to get the content localized in case of the service supporting it.
+
+```ruby
+>> MyModel.all.in_locale(:en).fetch(:body).first.body
+=> "This is my text"
+
+>> MyModel.all.in_locale(:es).fetch(:body).first.body
+=> "Este es mi texto"
+
+# Also accepts strings as locale
+>> MyModel.all.in_locale('es_ES').fetch(:body).first.body
+=> "Este es mi texto"
+```
