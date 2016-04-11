@@ -13,15 +13,23 @@ describe ActiveGraphQL::Fetcher do
   let(:query) { double(:query) }
   let(:graph) { [:some, graph: [:with, :stuff]] }
 
-  before do
-    expect(ActiveGraphQL::Query)
-      .to receive(:new).with(url: url,
-                             action: action,
-                             params: params).and_return(query)
+  describe '#in_locale' do
+    context 'with locale' do
+      let(:locale) { :some_locale }
+
+      subject { fetcher.in_locale(locale).query }
+
+      its(:locale) { is_expected.to eq locale }
+    end
   end
 
   describe '#fetch' do
     before do
+      expect(ActiveGraphQL::Query)
+        .to receive(:new).with(url: url,
+                               action: action,
+                               params: params).and_return(query)
+
       expect(query).to receive(:get).with(*graph).and_return(query_response)
     end
 

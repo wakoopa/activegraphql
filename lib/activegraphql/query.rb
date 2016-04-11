@@ -4,17 +4,23 @@ require 'activegraphql/support/fancy'
 
 module ActiveGraphQL
   class Query < Support::Fancy
-    attr_accessor :url, :action, :params, :graph, :response
+    attr_accessor :url, :action, :params, :locale, :graph, :response
 
     class ServerError < StandardError; end
 
     def get(*graph)
       self.graph = graph
 
-      self.response = HTTParty.get(url, query: { query: to_s })
+      self.response = HTTParty.get(url, request_options)
 
       raise(ServerError, response_error_messages) if response_errors.present?
       response_data
+    end
+
+    def request_options
+      { query: { query: to_s } }.tap do |opts|
+        opts.merge!(headers: { 'accept_language' => locale.to_s }) if locale.present?
+      end
     end
 
     def response_data
