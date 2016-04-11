@@ -77,13 +77,13 @@ Resolved query:
 Any fetcher provides the `in_locale(locale)` method that makes the call to include the `HTTP_ACCEPT_LANGUAGE` header to get the content localized in case of the service supporting it.
 
 ```ruby
->> MyModel.all.in_locale(:en).fetch(:body).first.body
+>> MyModel.all.in_locale(:en).fetch(:some_attribute).first.some_attribute
 => "This is my text"
 
->> MyModel.all.in_locale(:es).fetch(:body).first.body
+>> MyModel.all.in_locale(:es).fetch(:some_attribute).first.some_attribute
 => "Este es mi texto"
 
 # Also accepts strings as locale
->> MyModel.all.in_locale('es_ES').fetch(:body).first.body
+>> MyModel.all.in_locale('es_ES').fetch(:some_attribute).first.some_attribute
 => "Este es mi texto"
 ```
