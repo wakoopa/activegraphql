@@ -19,7 +19,7 @@ module ActiveGraphQL
 
     def request_options
       { query: { query: to_s } }.tap do |opts|
-        opts.merge!(headers: { 'accept_language' => locale.to_s }) if locale.present?
+        opts.merge!(headers: { 'Accept-Language' => locale.to_s }) if locale.present?
       end
     end
 

@@ -54,7 +54,7 @@ describe ActiveGraphQL::Query do
         let(:locale) { :en }
 
         let(:expected_request_options) do
-          { headers: { 'accept_language' => locale.to_s },
+          { headers: { 'Accept-Language' => locale.to_s },
             query: { query: expected_query_with_params } }
         end
 
