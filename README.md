@@ -3,7 +3,24 @@
 [![Build Status](https://travis-ci.org/wakoopa/activegraphql.png)](https://travis-ci.org/wakoopa/activegraphql)
 
 ActiveGraphQL connects classes to [GraphQL](http://graphql.org/) services.
-The library provides a **Model** class that, when subclassed and configured, encapsulates the communication with the service.
+
+## Installation
+
+Add this line to your application's Gemfile:
+
+```
+gem 'activegraphql'
+```
+
+And then execute:
+
+```
+$ bundle
+```
+
+## How it works?
+
+The library provides an `ActiveGraphQL::Model` class that, when subclassed and configured, encapsulates the communication with the service.
 
 ```ruby
 class MyModel < ActiveGraphQL::Model
@@ -11,7 +28,7 @@ class MyModel < ActiveGraphQL::Model
 end
 ```
 
-Any subclass of `ActiveGraphQL::Model` will provide the following methods:
+Any subclass of `ActiveGraphQL::Model` provides the following methods:
 
 - **all:** Retrive all objects for the entity.
 - **where(conditions):** Retrieve all objects for the entity finding by conditions.
