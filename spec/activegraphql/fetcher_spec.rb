@@ -1,9 +1,13 @@
 describe ActiveGraphQL::Fetcher do
   let(:fetcher) do
-    described_class.new(url: url,
+    described_class.new(config: config,
                         klass: Class.new(::Hashie::Mash),
                         action: action,
                         params: params)
+  end
+
+  let(:config) do
+    { url: url }
   end
 
   let(:url) { 'some-url' }
@@ -25,12 +29,8 @@ describe ActiveGraphQL::Fetcher do
 
   describe '#fetch' do
     before do
-      expect(ActiveGraphQL::Query)
-        .to receive(:new).with(url: url,
-                               action: action,
-                               params: params).and_return(query)
-
-      expect(query).to receive(:get).with(*graph).and_return(query_response)
+      expect(fetcher)
+        .to receive(:query_get).with(*graph).and_return(query_response)
     end
 
     context 'with hash response' do
@@ -70,6 +70,72 @@ describe ActiveGraphQL::Fetcher do
 
       it 'fails with unexpected error' do
         expect { subject }.to raise_error(ActiveGraphQL::Fetcher::Error)
+      end
+    end
+  end
+
+  describe '#query_get' do
+    let(:response) { double(:response) }
+
+    before do
+      expect(ActiveGraphQL::Query)
+        .to receive(:new).with(config: config,
+                               action: action,
+                               params: params).and_return(query)
+
+      expect(query).to receive(:get).with(*graph).and_return(response)
+
+      expect(Retriable).to receive(:retriable).with(expected_retriable_params).and_call_original
+    end
+
+    subject { fetcher.query_get(*graph) }
+
+    context 'without retriable config' do
+      let(:expected_retriable_params) do
+        { tries: 1 }
+      end
+
+      it { is_expected.to be response }
+    end
+
+    context 'with retriable config' do
+      let(:config) do
+        { url: url, retriable: retriable_config }
+      end
+
+      context 'with hash config' do
+        let(:retriable_config) { { tries: 3 } }
+
+        let(:expected_retriable_params) do
+          retriable_config
+        end
+
+        it { is_expected.to be response }
+      end
+
+      context 'with true config' do
+        let(:retriable_config) { true }
+
+        # with true config, it uses the default values for Retriable
+        let(:expected_retriable_params) { {} }
+
+        it { is_expected.to be response }
+      end
+
+      context 'with false config' do
+        let(:retriable_config) { false }
+
+        let(:expected_retriable_params) { { tries: 1 } }
+
+        it { is_expected.to be response }
+      end
+
+      context 'with nil config' do
+        let(:retriable_config) { false }
+
+        let(:expected_retriable_params) { { tries: 1 } }
+
+        it { is_expected.to be response }
       end
     end
   end

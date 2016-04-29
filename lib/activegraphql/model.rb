@@ -6,7 +6,7 @@ module ActiveGraphQL
     class Error < StandardError; end
 
     class << self
-      attr_accessor :url
+      attr_accessor :config
 
       # This provides ability to configure the class inherited from here.
       #  Also field classes will have the configuration.
@@ -19,13 +19,14 @@ module ActiveGraphQL
       #    class ModelToMyService < BaseModelToMyService
       #    end
       #
-      #    BaseModelToMyService.url
-      #    => "http://localhost:3000/graphql"
+      #    BaseModelToMyService.config
+      #    => { url: "http://localhost:3000/graphql" }
       #
       #    ModelToMyService.url
-      #    => "http://localhost:3000/graphql"
-      def configure(url: nil)
-        configurable_class.url = url
+      #    => { url: "http://localhost:3000/graphql" }
+      def configure(config = {})
+        configurable_class.config ||= {}
+        configurable_class.config.merge!(config)
       end
 
       # Resolves the class who is extending from ActiveGraphql::Model.
@@ -49,7 +50,7 @@ module ActiveGraphQL
       end
 
       def build_fetcher(action, params = nil)
-        Fetcher.new(url: configurable_class.url,
+        Fetcher.new(config: configurable_class.config,
                     klass: self,
                     action: action,
                     params: params)
