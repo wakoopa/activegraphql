@@ -104,3 +104,29 @@ Any fetcher provides the `in_locale(locale)` method that makes the call to inclu
 >> MyModel.all.in_locale('es_ES').fetch(:some_attribute).first.some_attribute
 => "Este es mi texto"
 ```
+
+## Configuration
+### Http
+`ActiveGraphQL::Query` uses [HttParty](https://github.com/jnunemaker/httparty) as codebase for http calls.
+The [http options](http://www.rubydoc.info/github/jnunemaker/httparty/HTTParty/ClassMethods) used to perform requests can be configured.
+
+```ruby
+class MyModel < ActiveGraphQL::Model
+  configure http: { timeout: 0.1 }
+end
+```
+
+### Retriable
+This gem supports retriable strategy with randomized exponential backoff, based on [Retriable](https://github.com/kamui/retriable).
+Retriable is disabled by default, so `ActiveGraphQL::Model.configure` accepts the available options for [Retriable#retriable](https://github.com/kamui/retriable#options).
+
+NOTE: Configuring `retriable: true` will activate `Retriable` with its defaults.
+
+```ruby
+class MyModel < ActiveGraphQL::Model
+  configure retriable: { on: [Timeout::Error, Errno::ECONNRESET],
+                         tries: 10,
+                         base_interval: 0.5,
+                         max_interval: 1 }
+end
+```

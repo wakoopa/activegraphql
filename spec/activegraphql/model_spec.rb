@@ -1,7 +1,10 @@
 describe ActiveGraphQL::Model do
+  config = { url: 'service_url',
+             retriable: { tries: 3 } }
+
   let(:configured_class) do
     ConfiguredClass ||= Class.new(described_class) do
-      configure url: 'service_url'
+      configure config
     end
   end
 
@@ -13,8 +16,7 @@ describe ActiveGraphQL::Model do
 
     context 'with configured class' do
       let(:klass) { configured_class }
-
-      its(:url) { is_expected.to eq 'service_url' }
+      its(:config) { is_expected.to eq config }
       its(:klass) { is_expected.to eq klass }
       its(:action) { is_expected.to eq action }
       its(:params) { is_expected.to eq params }
@@ -22,8 +24,7 @@ describe ActiveGraphQL::Model do
 
     context 'with class inheriting the configured one' do
       let(:klass) { Class.new(configured_class) }
-
-      its(:url) { is_expected.to eq 'service_url' }
+      its(:config) { is_expected.to eq config }
       its(:klass) { is_expected.to eq klass }
       its(:action) { is_expected.to eq action }
       its(:params) { is_expected.to eq params }
@@ -41,7 +42,7 @@ describe ActiveGraphQL::Model do
 
   describe '.all', with_expected_fetcher: true do
     let(:expected_fetcher_params) do
-      { url: 'service_url',
+      { config: config,
         klass: configured_class,
         action: :configured_classes,
         params: nil }
@@ -56,7 +57,7 @@ describe ActiveGraphQL::Model do
     let(:conditions) { double(:conditions) }
 
     let(:expected_fetcher_params) do
-      { url: 'service_url',
+      { config: config,
         klass: configured_class,
         action: :configured_classes,
         params: conditions }
@@ -71,7 +72,7 @@ describe ActiveGraphQL::Model do
     let(:conditions) { double(:conditions) }
 
     let(:expected_fetcher_params) do
-      { url: 'service_url',
+      { config: config,
         klass: configured_class,
         action: :configured_class,
         params: conditions }
