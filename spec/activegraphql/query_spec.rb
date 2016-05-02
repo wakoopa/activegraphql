@@ -53,7 +53,8 @@ describe ActiveGraphQL::Query do
       end
 
       let(:config) do
-        { url: url, timeout: 0.1 }
+        { url: url,
+          http: { timeout: 0.1 } }
       end
 
       it { is_expected.to eq(some_expected: 'data') }

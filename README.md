@@ -106,26 +106,21 @@ Any fetcher provides the `in_locale(locale)` method that makes the call to inclu
 ```
 
 ## Configuration
-### Timeout
-Request timeout is configurable (by default will be the default set by [HttParty](https://github.com/jnunemaker/httparty)):
+### Http
+`ActiveGraphQL::Query` uses [HttParty](https://github.com/jnunemaker/httparty) as codebase for http calls.
+The [http options](http://www.rubydoc.info/github/jnunemaker/httparty/HTTParty/ClassMethods) used to perform requests can be configured.
 
 ```ruby
 class MyModel < ActiveGraphQL::Model
-  configure timeout: 0.1
+  configure http: { timeout: 0.1 }
 end
 ```
 
 ### Retriable
 This gem supports retriable strategy with randomized exponential backoff, based on [Retriable](https://github.com/kamui/retriable).
+Retriable is disabled by default, so `ActiveGraphQL::Model.configure` accepts the available options for [Retriable#retriable](https://github.com/kamui/retriable#options).
 
-Retriable is disabled by default, so `ActiveGraphQL::Model.configure` accepts the following options:
-
-- `tries` (default: 3) - Number of attempts to make at running your code block (includes intial attempt).
-- `base_interval` (default: 0.5) - The initial interval in seconds between tries.
-- `max_interval` (default: 60) - The maximum interval in seconds that any try can reach.
-- `on` (default: [StandardError]) - An Array of exceptions to rescue for each try, a Hash where the keys are Exception classes and the values can be a single Regexp pattern or a list of patterns, or a single Exception type.
-
-NOTE: Configuring `retriable: true` will activate Retriable with its defaults.
+NOTE: Configuring `retriable: true` will activate `Retriable` with its defaults.
 
 ```ruby
 class MyModel < ActiveGraphQL::Model

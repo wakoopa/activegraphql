@@ -43,17 +43,10 @@ module ActiveGraphQL
       # use defaults if retriable config is not a hash (ie. retriable: true | false)
       @retriable_config ||=
         if config[:retriable].is_a?(Hash)
-          default_retriable_options.merge(
-            config[:retriable].slice(*retriable_supported_options)
-          )
+          default_retriable_options.merge(config[:retriable])
         else
           default_retriable_options
         end
-    end
-
-    # Supported configuration options for retriable
-    def retriable_supported_options
-      @retries_accepted_options ||= [:on, :tries, :base_interval, :max_interval]
     end
 
     # Defaults are:
