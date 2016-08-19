@@ -130,3 +130,38 @@ class MyModel < ActiveGraphQL::Model
                          max_interval: 1 }
 end
 ```
+
+### Authorization
+It's currently supporting JWT authorization using `auth` option.
+
+It basically offers two configuration params:
+
+- `strategy`: Currently, `jwt`(Json Web Token) strategy is the only one available.
+- `class`: The existing strategy uses your own custom class to encode the payload into the token (the class must provide at least an `.encode` class method that accepts the payload).
+
+Your encoder class may look like that:
+```ruby
+class YourEncoderClass
+  def self.secret 
+    'your-safely-secured-secret'
+  end
+
+  def self.encode(payload)
+    # You could have custom stuff here like adding expiration to the payload.
+    JWT.encode(payload, secret)
+  end
+  
+  def self.decode(token)
+    JWT.decode(token, secret)
+  end
+end
+```
+
+Then your configuration would look like the next:
+```ruby
+class MyModel < ActiveGraphQL::Model
+  configure auth: { strategy: :jwt, class: YourEncoderClass }
+end
+```
+
+

@@ -18,10 +18,22 @@ module ActiveGraphQL
     end
 
     def request_options
-      { query: { query: to_s } }.tap do |opts|
-        opts.merge!(headers: { 'Accept-Language' => locale.to_s }) if locale.present?
+      {}.tap do |opts|
+        opts[:query] = request_params
+        opts[:headers] = request_headers if request_headers.present?
         opts.merge!(config[:http]) if config[:http].present?
       end
+    end
+
+    def request_headers
+      {}.tap do |headers|
+        headers['Authorization'] = "Bearer #{auth_token}" if auth_header?
+        headers['Accept-Language'] = locale.to_s if locale.present?
+      end
+    end
+
+    def request_params
+      { query: to_s }
     end
 
     def response_data
@@ -72,6 +84,26 @@ module ActiveGraphQL
     end
 
     private
+
+    def auth_header?
+      auth_strategy == :jwt
+    end
+
+    def auth_config
+      @auth_config ||= config[:auth] || {}
+    end
+
+    def auth_strategy
+      @auth_strategy ||= auth_config[:strategy]
+    end
+
+    # ActiveGraphQL currently supports jwt authentication with given class to encode.
+    # So if the :jwt is not configured or the class is not present it's
+    # returning a nil token.
+    def auth_token
+      return if auth_config[:strategy] != :jwt || auth_config[:class].blank?
+      @auth_token ||= auth_config[:class].encode(request_params)
+    end
 
     def to_snake_case(value)
       case value
