@@ -132,12 +132,12 @@ end
 ```
 
 ### Authorization
-It's currently supporting JWT authorization using `auth` option.
+It's currently supporting simple bearer authorization using `auth` option.
 
 It basically offers two configuration params:
 
-- `strategy`: Currently, `jwt`(Json Web Token) strategy is the only one available.
-- `class`: The existing strategy uses your own custom class to encode the payload into the token (the class must provide at least an `.encode` class method that accepts the payload).
+- `strategy`: Currently, `bearer` strategy is the only one available.
+- `class`: The existing strategy uses your own custom class to encode a token (the class must provide at least an `.encode` class method).
 
 Your encoder class may look like that:
 ```ruby
@@ -146,8 +146,9 @@ class YourEncoderClass
     'your-safely-secured-secret'
   end
 
-  def self.encode(payload)
+  def self.encode
     # You could have custom stuff here like adding expiration to the payload.
+    payload = { exp: (Time.current.to_i + 100) }
     JWT.encode(payload, secret)
   end
   
@@ -160,7 +161,7 @@ end
 Then your configuration would look like the next:
 ```ruby
 class MyModel < ActiveGraphQL::Model
-  configure auth: { strategy: :jwt, class: YourEncoderClass }
+  configure auth: { strategy: :bearer, class: YourEncoderClass }
 end
 ```
 

@@ -99,12 +99,8 @@ describe ActiveGraphQL::Query do
       end
     end
 
-    context 'with jwt auth strategy configured' do
-      let(:token) { 'some.jwt.token' }
-
-      let(:payload) do
-        { query: expected_query_with_params }
-      end
+    context 'with bearer auth strategy configured' do
+      let(:token) { 'some.token' }
 
       let(:expected_request_options) do
         { query: { query: expected_query_with_params },
@@ -113,11 +109,11 @@ describe ActiveGraphQL::Query do
 
       let(:config) do
         { url: url,
-          auth: { strategy: :jwt, class: Object } }
+          auth: { strategy: :bearer, class: Object } }
       end
 
       before do
-        expect(Object).to receive(:encode).with(payload).and_return(token)
+        expect(Object).to receive(:encode).and_return(token)
       end
 
       it { is_expected.to eq(some_expected: 'data') }

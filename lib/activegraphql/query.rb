@@ -86,7 +86,7 @@ module ActiveGraphQL
     private
 
     def auth_header?
-      auth_strategy == :jwt
+      auth_strategy == :bearer
     end
 
     def auth_config
@@ -97,12 +97,12 @@ module ActiveGraphQL
       @auth_strategy ||= auth_config[:strategy]
     end
 
-    # ActiveGraphQL currently supports jwt authentication with given class to encode.
-    # So if the :jwt is not configured or the class is not present it's
+    # ActiveGraphQL currently supports bearer authorization with given class to encode.
+    # So if the "bearer" is not configured or the "class" is not present it's
     # returning a nil token.
     def auth_token
-      return if auth_config[:strategy] != :jwt || auth_config[:class].blank?
-      @auth_token ||= auth_config[:class].encode(request_params)
+      return if auth_config[:strategy] != :bearer || auth_config[:class].blank?
+      @auth_token ||= auth_config[:class].encode
     end
 
     def to_snake_case(value)
