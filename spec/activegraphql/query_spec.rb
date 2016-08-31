@@ -98,6 +98,26 @@ describe ActiveGraphQL::Query do
         end
       end
     end
+
+    context 'with bearer auth strategy configured' do
+      let(:token) { 'some.token' }
+
+      let(:expected_request_options) do
+        { query: { query: expected_query_with_params },
+          headers: { 'Authorization' => "Bearer #{token}" } }
+      end
+
+      let(:config) do
+        { url: url,
+          auth: { strategy: :bearer, class: Object } }
+      end
+
+      before do
+        expect(Object).to receive(:encode).and_return(token)
+      end
+
+      it { is_expected.to eq(some_expected: 'data') }
+    end
   end
 
   describe '#to_s' do
