@@ -34,33 +34,43 @@ describe ActiveGraphQL::Fetcher do
     end
 
     context 'with hash response' do
-      let(:query_response) do
-        { field: 'value', nested_object: { field: 'value' } }
-      end
-
       subject { fetcher.fetch(*graph) }
 
-      its(:field) { is_expected.to eq 'value' }
+      context 'with data present' do
+        let(:query_response) do
+          { field: 'value', nested_object: { field: 'value' } }
+        end
 
-      it 'also works with nested objects' do
-        expect(subject.nested_object.field).to eq 'value'
+        its(:field) { is_expected.to eq 'value' }
+
+        it 'also works with nested objects' do
+          expect(subject.nested_object.field).to eq 'value'
+        end
+      end
+
+      context 'with empty data' do
+        let(:query_response) { {} }
+
+        it { is_expected.to be_nil }
       end
     end
 
     context 'with array response' do
-      let(:query_response) { [{ field: 'value1' }, { field: 'value2' }] }
-
-      subject { fetcher.fetch(*graph).first }
-
-      its(:field) { is_expected.to eq 'value1' }
-    end
-
-    context 'with nil response' do
-      let(:query_response) { nil }
-
       subject { fetcher.fetch(*graph) }
 
-      it { is_expected.to be_nil }
+      context 'with data present' do
+        let(:query_response) { [{ field: 'value1' }, { field: 'value2' }] }
+
+        it 'resturns the right array' do
+          expect(subject.first.field).to eq 'value1'
+        end
+      end
+
+      context 'with empty data' do
+        let(:query_response) { [] }
+
+        it { is_expected.to eq [] }
+      end
     end
 
     context 'with unexpected response' do
