@@ -23,10 +23,9 @@ module ActiveGraphQL
     def fetch(*graph)
       response = query_get(*graph)
 
-      return if response.blank?
-
       case response
       when Hash
+        return nil if response.empty?
         klass.new(response)
       when Array
         response.map { |h| klass.new(h) }
