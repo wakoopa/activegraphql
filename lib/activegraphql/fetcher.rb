@@ -29,6 +29,8 @@ module ActiveGraphQL
         klass.new(response)
       when Array
         response.map { |h| klass.new(h) }
+      when NilClass
+        return nil
       else
         raise Error, "Unexpected response for query: #{response}"
       end

@@ -53,6 +53,12 @@ describe ActiveGraphQL::Fetcher do
 
         it { is_expected.to be_nil }
       end
+
+      context 'with nil response' do
+        let(:query_response) { nil }
+
+        it { is_expected.to be_nil }
+      end
     end
 
     context 'with array response' do
