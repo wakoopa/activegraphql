@@ -151,8 +151,26 @@ describe ActiveGraphQL::Query do
       it { is_expected.to be_nil }
     end
 
-    context 'with params' do
+    context 'with string params' do
       it { is_expected.to eq "someLongParamName1: \"value1\", someLongParamName2: \"value2\"" }
+    end
+
+    context 'with array param' do
+      let(:params) { { array_param: ['foo', 'bar'] } }
+
+      it { is_expected.to eq 'arrayParam: ["foo", "bar"]' }
+    end
+
+    context 'with boolean params' do
+      let(:params) { { true_param: true, false_param: false } }
+
+      it { is_expected.to eq 'trueParam: true, falseParam: false' }
+    end
+
+    context 'with integer param' do
+      let(:params) { { int_param: 42 } }
+
+      it { is_expected.to eq 'intParam: 42' }
     end
   end
 
