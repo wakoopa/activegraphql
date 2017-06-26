@@ -64,10 +64,21 @@ module ActiveGraphQL
       return if params.blank?
 
       param_strings = params.map do |k, v|
-        "#{k.to_s.camelize(:lower)}: \"#{v}\""
+        "#{k.to_s.camelize(:lower)}: #{qargument(v)}"
       end
 
       param_strings.join(', ')
+    end
+
+    def qargument(value)
+      case value
+      when Array
+        "[#{value.map{ |v| qargument(v) }.join(', ')}]"
+      when String
+        "\"#{value}\""
+      else
+        value.to_s
+      end
     end
 
     def qgraph(graph)
