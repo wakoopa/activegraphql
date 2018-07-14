@@ -90,6 +90,14 @@ Resolved query:
 { myModel("id": "5") { id, name, nestedObject { description } } }
 ```
 
+## Variables
+Any fetcher provides the `with_variables(variables_hash)` method that appends request body with `variables` param. It could contain any meta data that is acceptable by your GraphQL serivce (pagination, sorting,  directives, etc)
+
+```ruby
+>> MyModel.all.with_variables(limit: 25).fetch(:some_attribute).size
+=> 25
+```
+
 ## Localisation support
 Any fetcher provides the `in_locale(locale)` method that makes the call to include the `HTTP_ACCEPT_LANGUAGE` header to get the content localized in case of the service supporting it.
 

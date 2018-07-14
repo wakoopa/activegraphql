@@ -4,9 +4,15 @@ require 'activegraphql/support/fancy'
 
 module ActiveGraphQL
   class Query < Support::Fancy
-    attr_accessor :config, :action, :params, :locale, :graph, :response
+    attr_accessor :config, :action, :params, :locale, :variables, :graph,
+                  :response
 
     class ServerError < StandardError; end
+
+    def initialize(attrs = {})
+      @variables = {}
+      super
+    end
 
     def get(*graph)
       self.graph = graph
@@ -33,7 +39,9 @@ module ActiveGraphQL
     end
 
     def request_params
-      { query: to_s }
+      { query: to_s }.tap do |params|
+        params[:variables] = variables if variables.present?
+      end
     end
 
     def response_data
@@ -92,6 +100,10 @@ module ActiveGraphQL
       end
 
       graph_strings.join(', ')
+    end
+
+    def merge_variables(variables_hash)
+      @variables = @variables.merge(variables_hash)
     end
 
     private

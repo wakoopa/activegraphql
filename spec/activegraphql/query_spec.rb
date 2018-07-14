@@ -34,6 +34,7 @@ describe ActiveGraphQL::Query do
     'attr1, object { nestedAttr, nestedObject { superNestedAttr } }, attr2 }' \
     ' }'
   end
+  let(:variables_hash) { { skip: 20, limit: 10 } }
 
   describe '#get' do
     let(:response) do
@@ -77,6 +78,21 @@ describe ActiveGraphQL::Query do
           end
 
           before { query.locale = locale }
+
+          it { is_expected.to eq(some_expected: 'data') }
+        end
+
+        context 'with variables' do
+          let(:expected_request_options) do
+            {
+              query: {
+                query: expected_query_with_params,
+                variables: variables_hash
+              }
+            }
+          end
+
+          before { query.variables = variables_hash }
 
           it { is_expected.to eq(some_expected: 'data') }
         end
@@ -178,5 +194,29 @@ describe ActiveGraphQL::Query do
     subject { query.qgraph(graph) }
 
     it { is_expected.to eq 'attr1, object { nestedAttr, nestedObject { superNestedAttr } }, attr2' }
+  end
+
+  describe '#merge_variables' do
+    subject { query.merge_variables(variables_hash) }
+
+    context 'when there are no variables before' do
+      it do
+        subject
+        expect(query.variables).to eq(variables_hash)
+      end
+    end
+
+    context 'when there are some variables' do
+      let(:other_variables) { { withFriends: true } }
+
+      before do
+        query.variables = other_variables
+      end
+
+      it do
+        subject
+        expect(query.variables).to include(variables_hash, other_variables)
+      end
+    end
   end
 end
