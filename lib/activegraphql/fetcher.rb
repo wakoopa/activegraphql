@@ -20,6 +20,11 @@ module ActiveGraphQL
       self
     end
 
+    def with_variables(variables_hash)
+      query.merge_variables(variables_hash)
+      self
+    end
+
     def fetch(*graph)
       response = query_get(*graph)
 

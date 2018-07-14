@@ -27,6 +27,14 @@ describe ActiveGraphQL::Fetcher do
     end
   end
 
+  describe '#with_variables' do
+    let(:variables_hash) { { skip: 20, limit: 10 } }
+
+    subject { fetcher.with_variables(variables_hash).query }
+
+    its(:variables) { is_expected.to eq variables_hash }
+  end
+
   describe '#fetch' do
     before do
       expect(fetcher)
